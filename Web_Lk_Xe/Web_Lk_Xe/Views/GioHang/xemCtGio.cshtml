@@ -1,0 +1,325 @@
+﻿
+@{
+    ViewBag.Title = "xemCtGio";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+<link href="~/Content/toastr.css" rel="stylesheet" />
+<style>
+    .pro_name a {
+        color: #6cd30ff2;
+    }
+    .pro_price a, .pro_sum a{
+        color: red;
+    }
+    .btn_edit:hover{
+        color: darkcyan;
+    }
+    .details_cart-main {
+        padding: 20px;
+    }
+
+    .detail_cart-right {
+        border-left: 1px solid #ececec;
+    }
+
+    .pro_name,
+    .pro_delete {
+        padding: 50px 0px !important;
+        text-align: center;
+    }
+
+    .pro_sum,
+    .pro_price {
+        padding: 50px 0px !important;
+    }
+
+    .pro_img {
+        width: 10%;
+    }
+
+    .pro_name {
+        width: 30%;
+        word-wrap: break-word;
+    }
+
+    .pro_img img {
+        width: 100px;
+    }
+
+
+
+    .product-order-quantity {
+        display: flex;
+        padding: 27px 0px;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+        .product-order-quantity button {
+            font-size: 20px;
+            width: 45px;
+            height: 45px;
+            border: none;
+        }
+
+        .product-order-quantity input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #e9e4df;
+        }
+
+    .cart-page-info {
+    }
+
+        .cart-page-info h1 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+    .cart-page-subtitle {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+    }
+
+    .cart-page-total {
+        color: #999;
+        font-size: 13px;
+    }
+
+    .cart-page-checkout .btn-pro-order-buying {
+        height: 45px;
+        border: 1px solid rgb(122, 226, 153);
+        width: 100%;
+        font-weight: 600;
+        background-color: #fff;
+        margin-top: 50px;
+        cursor: pointer;
+    }
+
+        .cart-page-checkout .btn-pro-order-buying:hover {
+            background-color: rgb(122, 226, 153);
+            color: #fff;
+        }
+</style>
+<div class="details_cart-main">
+    <div class="container">
+        <div class="body_details-cart row">
+            <div class="detail_cart-left col-8">
+                <table class="table">
+                    <thead style="border-bottom: 3px solid #ececec;">
+                        <tr>
+                            <th class="pro-name" colspan="4">Sản Phẩm</th>
+                            <th class="pro-price">Giá</th>
+                            <th class="pro-quantity">Số Lượng</th>
+                            <th class="pro-sum">Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detail_cart-body">
+                        @*<tr>
+                            <td class="pro_delete"> <a href="">Xóa</a> </td>
+                            <td class="pro_img"><img src="~/Assces/Anh/img_SanPham/RVS-091407-01-300x300.jpg" alt=""></td>
+                            <td class="pro_name"><a href="">DVD-Toyota-Altis-01</a></td>
+
+                            <td class="pro_price"><a href="">120000 ₫</a></td>
+                            <td>
+                                <div class="product-order-quantity">
+                                    <button onclick="clickDecrease()" type="button">-</button>
+                                    <input type="text" class="quantity-input" oninput="javascript: uppdateSL(this.value, this.data)" value="0" id="result">
+                                    <button onclick="clickIncrease()" type="button">+</button>
+                                </div>
+                            </td>
+                            <td class="pro_sum"><a href="">120000 ₫</a></td>
+
+                        </tr>*@
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="detail_cart-right col-4" id="tt">
+                @*<div class="cart-page-info">
+                    <h1>Thông tin sản phẩm</h1>
+                    <hr>
+                    <div class="cart-page-subtitle">
+                        <span>Tạm tính (1 sản phẩm)</span>
+                        <span>21133₫</span>
+                    </div>
+                    <div class="cart-page-total">Phương thức thanh toán xe đươc chọn khi bạn đặt hàng</div>
+                    <hr>
+                     
+                    <div class="cart-page-checkout">
+                        <a href="/DatHang/DatHang">
+                            <button class="btn-pro-order-buying">ĐẶT HÀNG</button>
+                        </a>
+
+                    </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="~/Scripts/toastr.js"></script>
+<script>
+   
+    $(document).ready(function () {
+        LoadDsGio()
+        Loadtt()
+    })
+
+    function uppdateSL(slnew) {
+        $(document).on('click', "button[name='suaSP']", function () {
+            //let sl = $('.quantity-input').val();
+            $.ajax({
+                url: '/GioHang/suaSpGioHang',
+                type: 'post',
+                data: {
+                    msp: $(this).data("id"),
+                    slnew: slnew
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        toastr.error(data.msg, "Thông Báo ");
+
+                    }
+                    else {
+                        toastr.success(data.msg, "Thông Báo");
+                        Loadtt();
+                        LoadDsGio();
+                    }
+
+                }
+            })
+        })
+    }
+
+
+    function Loadtt() {
+        $.ajax(
+            {
+                url: '/GioHang/loadTT',
+                type: 'get',
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#tt').empty()
+                        let div = '<div class="cart-page-info">'
+                        div += '<h1>Thông tin sản phẩm</h1>';
+                        div += '<hr>';
+                        div += '<div class="cart-page-subtitle">' + '<span>Tạm tính (' + data.tongSL + ' sản phẩm)</span>' + '<span>' + new Intl.NumberFormat().format(data.tong) + '₫</span>' + '</div>';
+                        div += '<div class="cart-page-total">Phương thức thanh toán xe đươc chọn khi bạn đặt hàng</div>'
+                        div += '<hr>'
+                        div += '<div class="cart-page-subtitle">' + '<div class="product-order-quantity">' + '<span>Tổng cộng</span>' + ' <span style="color: red; font-weight: bold;">' + new Intl.NumberFormat().format(data.tong) + '₫</span>' + '</div>' + '</div>'
+
+                        div += '<div class="cart-page-checkout">' + ' <a href="/DatHang/DatHang">' + ' <button class="btn-pro-order-buying">ĐẶT HÀNG</button>' + '</a>'+ ' </div>'
+                        $('#tt').append(div);
+                    }
+                }
+            }
+        );
+    }
+
+
+    function LoadDsGio() {
+        $.ajax(
+            {
+                url: '/GioHang/loadGioHang',
+                type: 'get',
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#detail_cart-body').empty()
+                        $.each(data.dsGio, function (k, v) {
+                            let tr = '<tr>'
+                            tr += '<td class="pro_delete" > <button class="btn_edit" name="xoaSP" style="border: none;  background-color: #fff" data-id = ' + v.maSP + '>Xóa</ button> </td>';
+                            tr += '<td class="pro_delete" > <button class="btn_edit" name="suaSP" style="border: none;  background-color: #fff" data-id = ' + v.maSP + '>Sửa</ button> </td>';
+                            tr += '<td class="pro_img"><img src="/Assces/Anh/img_SanPham/' + v.hinhSp + '" class="img_de" alt=""></td>';
+                            tr += '<td class="pro_name">' + '<a href="">' + v.tenSp + '</a>' + '</td>'
+                            tr += '<td class="pro_price">' + '<a href="">' + new Intl.NumberFormat().format(v.giaSp) + '₫' + '</a>' + '</td>'
+                            tr += '<td>' +
+                                '<div class="product-order-quantity">'
+                                +
+                                '<button  type="button">-</button>'
+                                +
+                                '<input type="text" class="quantity-input" oninput="javascript:uppdateSL(this.value)" value="' + v.sl + '" id="result">'
+                                +
+                                '<button onclick="cong()" type="button">+</button>'
+                                +
+                                '</div>'
+                                +
+                                '</td>'
+                            tr += '<td class="pro_sum">' + '<a href="">' + new Intl.NumberFormat().format(v.giaSp * v.sl) + '₫' + '</a>' + '</td>'
+                            $('#detail_cart-body').append(tr);
+                        });
+                    }
+                }
+            }
+        );
+    }
+
+
+
+
+    $(document).on('click', "button[name='xoaSP']", function () {
+        $.ajax({
+            url: '/GioHang/xoaSpGioHang',
+            type: 'post',
+            data: {
+                msp: $(this).data("id"),
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    toastr.error(data.msg, "Thông Báo ");
+
+                }
+                else {
+                    toastr.success(data.msg, "Thông Báo");
+                    $('#addcart').html(data.soLuong);
+                    Loadtt();
+                    LoadDsGio();
+                }
+
+            }
+        })
+    })
+
+    //Sua gio hang
+    //$(document).on('click', "button[name='suaSP']", function () {
+    //    //let sl = $('.quantity-input').val();
+    //    $.ajax({
+    //        url: '/GioHang/suaSpGioHang',
+    //        type: 'post',
+    //        data: {
+    //            msp: $(this).data("id"),
+    //            slnew: $input.data(id).val()
+    //        },
+    //        success: function (data) {
+    //            if (data.code == 200) {
+    //                toastr.error(data.msg, "Thông Báo ");
+
+    //            }
+    //            else {
+    //                toastr.success(data.msg, "Thông Báo");
+    //                Loadtt();
+    //                LoadDsGio();
+    //            }
+
+    //        }
+    //    })
+    //})
+
+    
+    //function cong() {
+    //    var t = document.getElementById("result").value;
+    //    document.getElementById("result").value = parseInt(t) + 1
+    //}
+
+
+</script>
+
+
+
+
+
+
+

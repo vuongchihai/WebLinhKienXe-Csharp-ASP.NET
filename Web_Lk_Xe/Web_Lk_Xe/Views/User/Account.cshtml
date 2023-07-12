@@ -1,0 +1,230 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/Assces/Account.css" rel="stylesheet" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>Account</title>
+</head>
+<body>
+    <div class="main-user">
+        <div class="user-body">
+            <div class="tab-list">
+                <div class="tab-login tab-item">
+                    <h5>Đăng nhập</h5>
+                </div>
+                <div class="tab-register tab-item">
+                    <h5>Đăng ký</h5>
+                </div>
+                <div class="line"></div>
+
+            </div>
+            <!-- tab-content nhan du lieu dang nhap dang ky -->
+            <div class="tap-wrap">
+                <div class="tap-content">
+                    <div class="tap-item">
+                        <form action="" class="tab-pane">
+                            <div class="form-login form-item">
+                                <h2>Đăng Nhập</h2>
+                                <input type="text" placeholder="Email.." id="tdnLg">
+                                <input type="password" placeholder="Password.." id="passLg">
+                                <button type="button" class="btn-login" value="Đăng nhập" id="dangNhap"> Đăng nhập </button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <div class="tap-item">
+                        <form action="" class="tab-pane" method="post">
+                            <div class="form-register form-item">
+                                <h2>Đăng Ký</h2>
+                                <input type="text" placeholder="Tên của bạn.." id="tenKh" > 
+                                <input type="text" placeholder="Email"  name="tDn" id="tdnrg">
+                                <input type="password" placeholder="Password">
+                                <input type="password" placeholder="Nhập lại Password" name="pass" id="passrg">
+                                <button type="button" class="btn-register" value="Đăng Ký" id="dangKy">
+                                    Đăng ký
+                                </button>
+
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="~/Scripts/toastr.js"></script>
+    <script>
+        //toastr.options = {
+        //    "closeButton": true
+        //}
+        //$(document).ready(function () {
+        //    $('#dangKy').click(function () {
+        //        toastr.success('Hello World!', 'Title');
+          
+                
+               
+        //    });
+        //});
+
+        // Đăng ký
+        $('#dangKy').click(function () {
+            let tdn = $('#tdnrg').val();
+            let Pass = $('#passrg').val();
+            let tenKh = $('#tenKh').val();
+            $.ajax({
+                url: '/User/CreateAccount',
+                type: 'post',
+                data: {
+                    tenTk: tdn,
+                    pass: Pass,
+                    tkh: tenKh,
+
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        toastr.error(data.msg, "Thông Báo ");
+                    }
+                    else {
+                        toastr.success(data.msg, "Thông Báo");
+                        setTimeout(function () { window.location.href = "/User/Account"; }, 3000)
+                    }
+
+                }
+            })
+        });
+
+        // đăng nhập
+        $('#dangNhap').click(function () {
+            let tdn = $('#tdnLg').val();
+            let Pass = $('#passLg').val();
+
+            $.ajax({
+                url: '/User/loginAccount',
+                type: 'post',
+                data: {
+                    tenTk: tdn,
+                    pass: Pass
+
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        toastr.error(data.msg, "Thông Báo ");
+                    }
+                    else {
+                        toastr.success(data.msg, "Thông Báo");
+                        setTimeout(function () { window.location.href = "/Home/Index"; }, 3000)
+                    }
+
+                }
+            })
+        });
+
+    </script>
+
+    @*dang nhap - tao tai khoan hieu ung*@
+    <script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const tapItems = document.querySelectorAll(".tap-item");
+        const tapItemWidth = tapItems[0].offsetWidth;
+        const tapContent = document.querySelector(".tap-content");
+        const tabLogin = document.querySelector(".tab-login")
+
+        const tabRegister = document.querySelector(".tab-register");
+
+        const tabListLine = document.querySelector(".tab-list .line");
+        var postionX = 0;
+        let dem = 0;
+        tabListLine.style.left = tabLogin.offsetLeft + "px"
+        tabListLine.style.width = tabLogin.offsetWidth + "px"
+        tabLogin.addEventListener("click", function () {
+            hand(1);
+            tabListLine.style.left = this.offsetLeft + "px"
+            tabListLine.style.width = this.offsetWidth + "px"
+        });
+
+        tabRegister.addEventListener("click", function () {
+            hand(-1);
+            tabListLine.style.left = this.offsetLeft + "px"
+            tabListLine.style.width = this.offsetWidth + "px"
+        });
+
+        function hand(x) {
+            if (x == 1) {
+                if (dem <= 0) {
+                    dem = 0;
+                    return;
+                }
+
+                console.log(dem);
+                postionX = postionX + tapItemWidth;
+                tapContent.style = `transform: translateX(${postionX}px)`;
+                dem--;
+
+
+            }
+            else if (x == -1) {
+                if (dem >= 1) {
+                    dem = 1;
+                    return;
+                }
+
+                console.log(dem);
+                postionX = postionX - tapItemWidth;
+                tapContent.style = `transform: translateX(${postionX}px)`;
+                dem++;
+            }
+        }
+
+
+        const btnLogin = document.querySelector('.btn-login')
+        btnLogin.onclick = function () {
+            btnLogin.disabled = true;
+            this.innerHTML = "<div class='loader'> </div>"
+
+            setTimeout(() => {
+                this.innerHTML = "Đăng Nhập";
+                btnLogin.disabled = false;
+            }, 2000);
+        }
+        const btnRegister = document.querySelector('.btn-register')
+        btnRegister.onclick = function () {
+            btnRegister.disabled = true;
+            this.innerHTML = "<div class='loader'> </div>"
+            setTimeout(() => {
+                this.innerHTML = "Đăng Ký";
+                btnRegister.disabled = false;
+            }, 2000);
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+﻿@using Web_Lk_Xe.Models
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    @*Thu vien slick*@
+    <link href="~/Assces/ThuVien/slick-1.8.1/slick/slick.css" rel="stylesheet" />
+    <link href="~/Assces/ThuVien/slick-1.8.1/slick/slick-theme.css" rel="stylesheet" />
+    @*css LayoutPage*@
+    <link href="~/Assces/LayoutPage.css" rel="stylesheet" />
+    <!-- Icon -->
+    <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet">
+    <script src="~/Assces/ThuVien/bootstrap5_2_3/js/bootstrap.bundle.js"></script>
+    <script src="~/Assces/ThuVien/bootstrap5_2_3/js/bootstrap.js"></script>
+    <link href="~/Assces/ThuVien/bootstrap5_2_3/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Assces/ThuVien/bootstrap5_2_3/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- gg font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div id="main-body">
+
+
+        <!-- Header - menu -->
+
+        <div class="header">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="header-logo">
+                        <img class="header_img" src="~/Assces/Anh/Logo/logo-mona-light.png" />
+                    </div>
+                    <div class="header-menu">
+                        <ul class="nav_menu">
+                            <li class="nav_menu-item"><a href="" class="nav_menu-link" style="font-size: 20px; display: flex;align-items: center;"><i class='bx bx-search-alt-2'></i></a></li>
+                            <li class="nav_menu-item"><a href="/Home/Index" class="nav_menu-link">trang chủ</a></li>
+                            <li class="nav_menu-item nav_sub-menu">
+                                <a href="#" class="nav_menu-link" style="display: flex; align-items: center;">
+                                    Sản phẩm
+                                    <i class='bx bx-chevron-down icon_d' style="font-size: 20px;"></i>
+                                </a>
+                                @Html.Action("DanhMucSanPham", "DanhMucSP")
+
+                            </li>
+                            <li class="nav_menu-item"><a href="" class="nav_menu-link">giới thiệu</a></li>
+                            <li class="nav_menu-item"><a href="" class="nav_menu-link">liên hệ</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="header_function">
+                        <ul class="nav_function">
+                            <li class="nav_function-item">
+                                <a href="/GioHang/xemCtGio" class="nav_function-link" style="display: flex; align-items: center; position: relative">
+                                    <span>
+                                        Giỏ hàng
+
+                                    </span>
+                                    <div class="cart-icon" style=" display: flex; align-items: center; margin-left: 6px; ">
+                                        <i class="bx bx-cart" style="font-size: 20px"></i>
+                                    </div>
+                                    @*Hien thi gio hang*@
+                                    @{
+                                        // neu dang nhap thi hien gio duoi csdl
+                                        if (Session["ttDangNhap"] != null)
+                                        {
+
+                                            <span class="cart-count" id="addcart">
+                                                @Session["gh_DangNhap"].ToString()
+                                            </span>
+
+                                        }
+                                        else
+                                        {
+                                            if (Session["CART"] != null)
+                                            {
+                                                gioHang gh = (gioHang)Session["CART"];
+                                                <span class="cart-count" id="addcart">
+                                                    @gh.DemSL()
+                                                </span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="cart-count" id="addcart">
+                                                    0
+                                                </span>
+                                            }
+                                        }
+
+                                    }
+                                </a>
+                            </li>
+                            <li class="nav_function-item nav_sub-menu">
+                                @{
+                                    if (Session["ttDangNhap"] == null)
+                                    {
+                                        <a href="/User/Account" class="nav_function-link">
+                                            <span>
+                                                Đăng nhập
+                                            </span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        KHACHHANG dnkh = (KHACHHANG)Session["ttkh"];
+                                        
+                                        <a href="#" class="nav_function-link">
+                                            <span id="tenkh_add">
+                                                @dnkh.TENKH
+                                            </span>
+
+                                        </a>
+                                        @Html.Action("menuAccount", "User")
+
+                                    }
+                                }
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- End - menu -->
+
+        <div>
+            @RenderBody()
+        </div>
+
+        <div class="footer-main">
+            <div class="footer-content">
+                <div class="container">
+                    <div class="row ">
+                        <div class="col-md-3 footer-lion">
+                            <h4 class="title-footer">PHỤ KIỆN</h4>
+                            <div class="row footer-content-lion">
+                                <div class="col-md footer-content-lion-text">
+                                    <p>
+                                        Đưa đến một chất lượng sản phẩm hoàn hảo với một giá thành hợp lí nhất. Luôn đặt
+                                        khách hàng lên trên cả lợi nhuận.
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3 footer-lion">
+                            <h4 class="title-footer">Hỗ trợ khách hàng</h4>
+                            <div class="footer-content-lion">
+                                <ul class="footer-Navlink">
+                                    <li><a href="./GioiThieu.html">Giới thiệu</a></li>
+                                    <li><a href="./ChinhSachDoiTra.html">Chính sách đổi trả</a></li>
+                                    <li><a href="./ChinhSachBaoMat.html">Chính sách bảo mật</a></li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3 footer-lion">
+                            <h4 class="title-footer">Liên Hệ </h4>
+                            <div class="footer-lion-content">
+                                <div class="footer-infor">
+                                    <span>
+                                        <b style="color: #fff !important;">Địa chỉ:</b> 400 Tân Kỳ Tân Quý, Phường
+                                        Sơn Kỳ, Quận Tân Phú, Tp Hồ Chí Minh
+                                    </span>
+                                    <ul class="add-footer-content-lion">
+                                        <li><b style="color: #fff;">Điện Thoại: </b>0366178160</li>
+                                        <li><b style="color: #fff;">Email: </b>likonTeam123@gmail.com</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3 footer-lion">
+                            <div class="flo-me">
+                                <h4 class="title-footer " style="color: #fff !important;">Follow PHỤ KIỆN nha! </h4>
+                                <ul class="nav footer-nav-icon">
+                                    <li>
+                                        <a href="" title="Follow on facebook">
+                                            <i class="bx bxl-facebook"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="" title="Follow on instagram">
+                                            <i class="bx bxl-instagram-alt"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="" title="Follow on twitter">
+                                            <i class="bx bxl-twitter"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="" title="Follow on google">
+                                            <i class="bx bxl-google"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <hr style="margin: 0px;">
+            <div class="footer-copyright">
+                Copyright © 2022 Nhóm 03
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="~/Assces/ThuVien/slick-1.8.1/slick/slick.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('.slider').slick({
+                infinite: true,
+                autoplay: true,
+                autoplaySpeed: 900,
+            });
+
+        });
+
+
+
+
+    </script>
+
+
+</body>
+</html>

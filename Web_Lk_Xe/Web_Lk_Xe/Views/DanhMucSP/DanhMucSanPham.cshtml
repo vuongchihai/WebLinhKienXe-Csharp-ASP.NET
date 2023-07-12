@@ -1,0 +1,14 @@
+﻿@using Web_Lk_Xe.Models
+@model List<LOAISP>
+
+<div class="header_sub-nav">
+    <ul class="sub_nav">
+        @foreach (var item in Model)
+        {
+            <li class="sub_nav-item">
+                <a href="/HienThiSanPham/hTSanPhamTheoDm?mLoai=@item.MALOAI" class="sub_nav-link">@item.TenLoai</a>
+            </li>
+        }
+    </ul>
+</div>
+

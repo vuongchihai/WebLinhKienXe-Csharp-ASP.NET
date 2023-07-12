@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewBag.Title = "hTSanPhamTheoDm";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+@using System.Globalization;
+@using Web_Lk_Xe.Models;
+@model List<SANPHAM>
+<link href="~/Content/toastr.css" rel="stylesheet" />
+<div class="main-layout">
+    <div class="collection-wapper">
+        <div class="container">
+            <div class="wapper-heading">
+                <div class="heading-text-product">
+                    <h4>Trang chủ / @ViewBag.TenLoai</h4>
+                </div>
+                <div class="product-soft">
+                    <div class="softMenu-nav-list">
+                        <a href="" class="softMenu-nav-link">
+                            <i class='bx bx-sort-down'></i>
+                            <div>Giá Cao - Thấp</div>
+                        </a>
+                    </div>
+                    <div class="softMenu-nav-list">
+                        <a href="" class="softMenu-nav-link">
+                            <i class='bx bx-sort-up'></i>
+                            <div>Giá Thấp - Cao</div>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="home-product-collection " style="margin-top: 49px;">
+        <div class="container">
+            <div class="wraplist-products-by-type">
+                @foreach (var item in Model)
+                {
+                    <div class="product-item">
+                        <div class="product-loop">
+                            <div class="product-title">
+
+                                <a class="prod-img" href="#">
+                                    <img src="~/Assces/Anh/img_SanPham/@item.HINH" class="img-fluid" />
+                                </a>
+                            </div>
+
+                            <div class="product-details">
+                                <h3>
+                                    <a href="#" class="prod-text-detai">
+                                        @item.TENSP
+                                    </a>
+                                </h3>
+
+                                <div class="product-price">
+                                    <!-- giá sau khi giam -->
+                                    <span class="price">Giá: @string.Format(new CultureInfo("vi-VN"), "{0:#,##0}", item.DONGIA)</span>
+                                </div>
+
+                            </div>
+
+                            @*thong bao*@
+                            <div class=" product-action">
+                                <a class="add-cart" href="#" data-id ="@item.MASP">
+                                    <i class='bx bxs-cart-add'></i>
+                                    Thêm vào giỏ
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                }
+            </div>
+            <!-- các sản phẩm item -->
+
+        </div>
+    </div>
+
+
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="~/Scripts/toastr.js"></script>
+<script>
+    $('.add-cart').click(function () {
+        $.ajax({
+            url: '/GioHang/ChonMua',
+            type: 'post',
+            data: {
+                msp: $(this).data("id"),
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    toastr.error(data.msg, "Thông Báo ");
+                   
+                }
+                else {
+                    toastr.success(data.msg, "Thông Báo");
+                    $('#addcart').html(data.soLuong);
+
+                }
+
+            }
+        })
+    })
+
+
+ 
+</script>
+

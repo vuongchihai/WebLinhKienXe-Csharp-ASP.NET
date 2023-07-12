@@ -1,0 +1,354 @@
+﻿
+@{
+    ViewBag.Title = "QLHoaDon";
+    Layout = "~/Views/Shared/Admin_Page.cshtml";
+}
+
+<link href="~/Content/toastr.css" rel="stylesheet" />
+
+
+@*view Ql hoa don*@
+<style>
+    :root {
+        --main-color: #DD2F6E;
+        --color-dark: #1D2231;
+        --text-grey: #8390A2;
+    }
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        list-style-type: none;
+        text-decoration: none;
+    }
+
+    ul {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .menu-function {
+        padding: 15px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05) !important;
+        background-color: #fff;
+        border-radius: 10px;
+    }
+
+        .menu-function ul {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-function li {
+        }
+
+            .menu-function li button {
+                background-color: #2fdd8f;
+                border: none;
+                width: 100%;
+                height: 100%;
+                padding: 10px;
+                border-radius: 12px;
+                cursor: pointer;
+            }
+
+    .table-content {
+        margin-top: 20px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05) !important;
+        border-radius: 13px;
+        background-color: #fff;
+    }
+
+    th, td {
+        padding: 20px !important;
+    }
+</style>
+<div class="main-title">
+    <p class="font-weight-bold">Quản Lý Hóa Đơn</p>
+</div>
+<div class="main-content">
+
+    <div class="menu-function">
+        <ul>
+            <li><button id="them_SP">Thêm Sản Phẩm</button></li>
+        </ul>
+    </div>
+    <div class="table-content">
+        <table class="table align-middle">
+            <thead class="bg-light">
+                <tr>
+                    <th>Mã hóa đơn</th>
+                    <th>Ngày mua</th>
+                    <th>Thành tiền</th>
+                    <th>Địa chỉ giao hàng</th>
+                    <th>SDT</th>
+                    <th>Phương thức thanh toán</th>
+                    <th>Mã khách hàng</th>
+                    <th>Đơn vị vận chuyển</th>
+                    <th>Tình Trạng</th>
+                    <th>Chức năng</th>
+
+
+                </tr>
+            </thead>
+            <tbody id="load_Hd">
+                @*<tr>
+                <td>SP001</td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img style="width: 45px; height: 45px;" src="./asces/img/DVD-Honda-Civic-01-300x300 (2).jpg" alt="">
+                        <div class="ms-3">
+                            DVD Honda Civic 2007-2011
+                        </div>
+                    </div>
+                </td>
+                <td>10</td>
+                <td>Màn hình</td>
+                <td>Senior</td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm">
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm">
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm">
+                        Edit
+                    </button>
+                </td>
+            
+            </tr>*@
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@*end view*@
+ @*model*@
+
+
+
+
+
+
+
+@*xem chi tiet hoa don*@
+<div class="modal fade" id="xCT_HD" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 200%">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Chi tiết hóa đơn</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table w-100">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Tên sản phẩm </th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="loadCt_Hd">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" id="updateSanPham">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@*sua hd*@
+
+<div class="modal fade" id="Sua_Hd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Thay đổi trạng thái giao hàng</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+               
+
+                <div class="form-group">
+                    <label>Tình trạng</label>
+                    <input type="text" class="form-control" id="tt_hd" disabled />
+                </div>
+                <div class="form-group">
+                    <label>Tình trạng</label>
+                    <select class="form-select" id="dv_vc" aria-label="Default select example">
+                        <option id="tt_s" value="Đang chờ xử lý">Đang chờ xử lý</option>
+                        <option id="tt_s" value="Dang giao hàng">Dang giao hàng</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" id="suaHd">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="~/Scripts/toastr.js"></script>
+<script>
+
+
+    $(document).ready(function () {
+        LoadHd()
+    })
+
+    // Load hóa đơn
+    function LoadHd() {
+        $.ajax(
+            {
+                url: '/Admin/loadHoaDon',
+                type: 'get',
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#load_Hd').empty()
+                        $.each(data.hd_Ds, function (k, v) {
+                            let tr = '<tr id=' + v.mAHD + '>'
+                            tr += '<td >' + v.mAHD + '</td>';
+                            tr += ' <td>' + v.ngayMua + '</td>';
+                            tr += ' <td>' + v.thanhTien + '</td>';
+                            tr += ' <td>' + v.diaChi + '</td>';
+                            tr += ' <td>' + v.sdt + '</td>';
+                            tr += ' <td>' + v.pt + '</td>';
+                            tr += ' <td>' + v.makh_hd + '</td>';
+                            tr += ' <td>' + v.vc_hd + '</td>';
+                            tr += '<td class="form-group">' +
+                                '<select class="form-select" id="tt__" aria-label="Default select example">'
+                                + '<option value="" selected disabled hidden>'+v.tt+'</option>' +
+                                '<option id="tt__" value="Đang chờ xử lý">Đang chờ xử lý</option>' +
+                                '<option id="tt__" value="Dang giao hàng">Dang giao hàng</option>'+
+                                '</select>' +
+                                '</td>'
+                            tr += '<td style ="display: flex; justify-content: space-between";>'
+                                + '<button type = "button"  name ="xemct_HD" class="btn btn-primary btn-sm" >Xem chi tiết</button>'
+                                + '<button type = "button"  name ="Xoa_ctHd" class="btn btn-primary btn-sm" >Xóa</button>'
+                                + '<button type = "button"   name="edit_Hd" class="btn btn-primary btn-sm" >Sửa</button>' + '</td >'
+                            $('#load_Hd').append(tr);
+                        });
+                    }
+                }
+            }
+        );
+    }
+
+    // Xem chi tiết hóa đơn
+    $(document).on('click', "button[name ='xemct_HD']", function () {
+
+        
+        let mahd = $(this).closest('tr').attr('id');
+        $.ajax(
+            {
+                url: '/Admin/loadCTHD',
+                type: 'get',
+                data: {
+                    ma_hd: mahd
+                },
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#loadCt_Hd').empty()
+                        $.each(data.ct_ds, function (k, v) {
+                            let tr = '<tr>'
+                            tr += ' <td>' + '<div class="d-flex align-items-center">'
+                                +
+                                '<img style="width: 45px; height: 45px;" src="/Assces/Anh/img_SanPham/' + v.Hinh + '" alt="">'
+                                + '<div class="ms-3">' + v.TenSp + '</div>'
+                                + '</td>';
+                            tr += ' <td>' + v.donGia + '</td>';
+                            tr += ' <td>' + v.sl + '</td>';
+                            tr += ' <td>' + v.tongCtSp + '</td>'
+                            $('#loadCt_Hd').append(tr);
+                            $('#xCT_HD').modal('show');
+                        });
+                    }
+                }
+            }
+        );
+    })
+
+
+    // Sửa trạng thái
+
+    $(document).on('click', "button[name ='edit_Hd']", function () {
+        let mahd = $(this).closest('tr').attr('id');
+        let tt_hd = $('#tt__').find(":selected").val();
+        $.ajax({
+            url: '/Admin/suaHD',
+            type: 'post',
+            data: {
+                maHd: mahd,
+                tt: tt_hd
+            },
+            success: function (data) {
+                if (data.code == 200) {
+
+                    toastr.error(data.msg, "Thông Báo ");
+                }
+                else {
+
+                    toastr.success(data.msg, "Thông Báo ");
+
+                }
+
+            }
+        })
+
+    })
+
+   
+
+
+    ////xóa sản phẩm
+    $(document).on('click', "button[name ='Xoa_ctHd']", function () {
+        let mahd = $(this).closest('tr').attr('id');
+        if (confirm("Bạn có thật sự muốn xóa")) {
+            $.ajax({
+                url: '/Admin/xoaHd',
+                type: 'post',
+                data: {
+                    maHd: mahd,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+
+                        toastr.error(data.msg, "Thông Báo ");
+                    }
+                    else {
+
+                        toastr.success(data.msg, "Thông báo");
+                        LoadHd()
+                    }
+
+                }
+            })
+        }
+
+    })
+
+
+
+
+</script>
+
+
+
+

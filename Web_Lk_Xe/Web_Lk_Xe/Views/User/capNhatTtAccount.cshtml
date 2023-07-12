@@ -1,0 +1,330 @@
+﻿
+@{
+    ViewBag.Title = "capNhatTtAccount";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+@using Web_Lk_Xe.Models;
+<link href="~/Content/toastr.css" rel="stylesheet" />
+<style>
+    .UpdateAccount_main {
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .UpdateAccount_body {
+        width: 1000px;
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 3px 6px -4px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
+    }
+
+    .updateAccount_lists {
+    }
+
+    .updateAccount_item h6 {
+        margin-bottom: 10px;
+    }
+
+    .updateAccount_item .upAcc_input {
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,.05);
+        color: rgba(0,0,0,.84) !important;
+        margin-bottom: 15px;
+        outline: none;  
+        width: 100%;
+        font-size: 15px;
+    }
+
+    .btn_Update_Acc {
+        margin-top: 25px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn_addUpdate button {
+        margin-top: 30px;
+        width: 150px;
+        border-radius: 5px;
+        background-color: rgb(195, 255, 127);
+        border: none;
+        padding: 5px;
+    }
+
+    .btn_Update_Acc button {
+        padding: 7px;
+        width: 300px;
+        border-radius: 5px;
+        background-color: aquamarine;
+        border: none;
+    }
+
+    /* dia chi gia hang */
+    .Address_body {
+        width: 1000px;
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 3px 6px -4px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
+    }
+
+    .Address_body_tile {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        align-items: center;
+    }
+
+    .btn_address {
+        width: 150px;
+        border-radius: 5px;
+        background-color: rgb(195, 255, 127);
+        border: none;
+        padding: 5px;
+    }
+
+    .contact_Address {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .Address_lists {
+        padding: 20px;
+    }
+</style>
+<div class="UpdateAccount_main">
+    <div class="container" style="align-items: center; justify-content: center; display: flex;">
+        <div class="UpdateAccount_body">
+            <div class="updateAccount_tile">
+                <h3>Tài Khoản</h3>
+            </div>
+            <div class="updateAccount_lists" id="update_acc">
+                <div class="updateAccount_item">
+                    <h6>Họ tên (*)</h6>
+                    <input type="text" class="upAcc_input" id="txt_name">
+                </div>
+                <div class="updateAccount_item">
+                    <h6>Email (*)</h6>
+                    <input type="text" class="upAcc_input" disabled id="txt_email">
+                </div>
+                <div class="updateAccount_item">
+                    <h6>Số điện thoại (*)</h6>
+                    <input type="text" class="upAcc_input" id="txt_sdt">
+                </div>
+                <div class="updateAccount_item">
+                    <h6 style="margin-bottom: 15px;">Giới tính (*)</h6>
+                    <input type="radio" id="txt_gt" name="gt" value="Nam"> Nam
+                    <input type="radio" id="txt_gt" name="gt" value="Nữ"> Nữ
+                </div>
+                <div class="btn_addUpdate" data-bs-toggle="modal" data-bs-target="#changePassword">
+                    <button type="button">Đổi mật khẩu</button>
+                </div>
+               
+                <div class="btn_Update_Acc">
+                    <button type="button" id="btns">Cập nhật tài khoản</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@*<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Launch demo modal
+    </button>*@
+
+
+@*Đổi mật khẩu*@
+<!-- Modal -->
+<div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Đổi mật khẩu</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Mật khẩu cũ</label>
+                    <input type="text" class="form-control" id="passOld" />
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu mới</label>
+                    <input type="text" class="form-control" id="passNew" />
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" id="change_Pass">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="~/Scripts/toastr.js"></script>
+<script>
+
+    $(document).ready(function () {
+        LoadttAcc()
+        LoadTTVanChuyen()
+    })
+
+    // khoi modol
+
+    $('#hehe').click(function () {
+        alert("hshshsh")
+    });
+
+
+    change_Pass
+
+
+    //Cập nhật thông tin
+    $('#btns').click(function () {
+        let name = $('#txt_name').val();
+        let sdts = $('#txt_sdt').val();
+        let gts = $("input[type='radio']:checked").val();
+        $.ajax({
+            url: '/User/XlcapNhatAccount',
+            type: 'post',
+            data: {
+                tenkh: name,
+                sdt: sdts,
+                gt: gts,
+
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    toastr.error(data.msg, "Thông Báo ");
+                }
+                else {
+                    toastr.success(data.msg, "Thông Báo");
+                    $('#tenkh_add').html(name);
+                    LoadttAcc();
+                }
+
+            }
+        })
+    });
+
+    //Đổi mật khẩu
+
+    $('#change_Pass').click(function () {
+        let passOld = $('#passOld').val();
+        let passNew = $('#passNew').val();
+        $.ajax({
+            url: '/User/xlDoiPass',
+            type: 'post',
+            data: {
+                PassOld: passOld,
+                PassNew: passNew,
+
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    toastr.error(data.msg, "Thông Báo ");
+                }
+                else {
+                    toastr.success(data.msg, "Thông Báo");
+                    $('#tenkh_add').html(name);
+                    LoadttAcc();
+                }
+
+            }
+        })
+    });
+
+
+    //Them dia chi gian hang
+    //$('#Add_DiaChi').click(function () {
+    //    let DiaChi = $('#dc').val();
+    //    let StdNh = $('#sdtNh').val();
+    //    let ngH = $('#ng').val();
+    //    $.ajax({
+    //        url: '/User/ThemDiaChi',
+    //        type: 'post',
+    //        data: {
+    //            dc: DiaChi,
+    //            stdnh: StdNh,
+    //            nguoiNhan: ngH,
+    //        },
+    //        success: function (data) {
+    //            if (data.code == 200) {
+    //                toastr.error(data.msg, "Thông Báo ");
+    //            }
+    //            else {
+    //                toastr.success(data.msg, "Thông Báo");
+    //                $('#tenkh_add').html(name);
+    //                LoadTTVanChuyen()
+
+    //            }
+
+    //        }
+    //    })
+    //});
+
+
+    function LoadttAcc() {
+        $.ajax(
+            {
+                url: '/User/loadTtAccount',
+                type: 'get',
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#txt_name').attr('value', data.tenkh)
+                        $('#txt_email').attr('value', data.Email)
+                        $('#txt_sdt').attr('value', data.sdt)
+
+                    }
+                }
+            }
+        );
+    }
+   
+    //function LoadTTVanChuyen() {
+    //    $.ajax(
+    //        {
+    //            url: '/User/loadVc',
+    //            type: 'get',
+    //            success: function (data) {
+    //                if (data.code == 500) {
+    //                    $('#address__').empty()
+    //                    $.each(data.dsVC, function (k, v) {
+    //                        let div = '<div class="Address_item">'
+    //                        div += '<div class="contact_Address" >'
+    //                            + '<div style="display: flex;">'
+    //                            + '<span>' + v.tennN + '</span>'+
+    //                            '<div class="kTdq3r" style="border-left: 0.5px solid rgba(0,0,0,.26);margin: 0 8px;"></div>'
+    //                            + '<span>(+84) ' + v.sdt_gh + '</span>'
+    //                            + '</div>'
+    //                        div += '<div>Cập nhật</div>'
+    //                        div += '</div>'
+    //                        div += '<div class="contact_Address">'
+    //                            +
+    //                            '<span>' + v.dia_Chi+'</span >'
+    //                            +
+    //                            '</div>'
+    //                        div += '<hr>'
+    //                        $('#address__').append(div);
+    //                    });
+    //                }
+    //            }
+    //        }
+    //    );
+    //}
+
+
+
+</script>
+

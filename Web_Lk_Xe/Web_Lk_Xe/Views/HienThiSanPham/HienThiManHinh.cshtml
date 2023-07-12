@@ -1,0 +1,59 @@
+﻿@using Web_Lk_Xe.Models
+@model List<SANPHAM>
+
+<div class="section_product-list">
+    <div class="section_product-item" style="margin-bottom: 60px;">
+        <div class="container">
+            <div class="banner_product">
+                <h3 class="banner_product-tile">✩ màn hình xe hơi ✩</h3>
+            </div>
+            <div class="wraplist-products">
+                @foreach (var item in Model)
+                {
+                    <div class="product-item">
+                        <div class="product-loop">
+                            <div class="product-title">
+                                <a class="prod-img" href="">
+                                    <img src="~/Assces/Anh/img_SanPham/Man_hinh_xe_hoi/@item.HINH" class="img-fluid" />
+
+                                </a>
+                            </div>
+
+                            <div class="product-details">
+                                <h3>
+                                    <a href="" class="prod-text-detai">
+                                        @item.TENSP
+                                        <br>
+                                    </a>
+                                </h3>
+
+                                <div class="product-price">
+                                    <!-- giá sau khi giam -->
+                                    <span class="price">Giá: @item.DONGIA</span>
+                                    <!-- giá gốc -->
+                                    <span class="price-del">350,000₫</span>
+                                </div>
+
+                            </div>
+                            <div class="product-action">
+                                <div class="add-cart">
+                                    <i class='bx bxs-cart-add'></i>
+                                    Thêm vào giỏ
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+</div>
+

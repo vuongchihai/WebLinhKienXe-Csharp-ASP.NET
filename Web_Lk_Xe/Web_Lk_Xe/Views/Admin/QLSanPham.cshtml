@@ -1,0 +1,430 @@
+﻿
+@{
+    ViewBag.Title = "QLSanPham";
+    Layout = "~/Views/Shared/Admin_Page.cshtml";
+}
+@using Web_Lk_Xe.Models
+@model List<LOAISP>
+<link href="~/Content/toastr.css" rel="stylesheet" />
+<style>
+    :root {
+        --main-color: #DD2F6E;
+        --color-dark: #1D2231;
+        --text-grey: #8390A2;
+    }
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        list-style-type: none;
+        text-decoration: none;
+    }
+
+    ul {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .menu-function {
+        padding: 15px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05) !important;
+        background-color: #fff;
+        border-radius: 10px;
+    }
+
+        .menu-function ul {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-function li {
+        }
+
+            .menu-function li button {
+                background-color: #2fdd8f;
+                border: none;
+                width: 100%;
+                height: 100%;
+                padding: 10px;
+                border-radius: 12px;
+                cursor: pointer;
+            }
+
+    .table-content {
+        margin-top: 20px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05) !important;
+        border-radius: 13px;
+        background-color: #fff;
+    }
+
+    th, td {
+        padding: 20px !important;
+    }
+</style>
+<div class="main-title">
+    <p class="font-weight-bold">DASHBOARD</p>
+</div>
+<div class="main-content">
+
+    <div class="menu-function">
+        <ul>
+            <li><button id="them_SP">Thêm Sản Phẩm</button></li>
+        </ul>
+    </div>
+    <div class="table-content">
+        <table class="table align-middle">
+            <thead class="bg-light">
+                <tr>
+                    <th>Mã linh kiện</th>
+                    <th>Tên linh kiện</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Loại sản phẩm</th>
+                    <th>Chức năng</th>
+
+                </tr>
+            </thead>
+            <tbody id="load_Sp">
+                @*<tr>
+                        <td>SP001</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img style="width: 45px; height: 45px;" src="./asces/img/DVD-Honda-Civic-01-300x300 (2).jpg" alt="">
+                                <div class="ms-3">
+                                    DVD Honda Civic 2007-2011
+                                </div>
+                            </div>
+                        </td>
+                        <td>10</td>
+                        <td>Màn hình</td>
+                        <td>Senior</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>*@
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@*Them*@
+<div class="modal fade" id="ThemSp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Đổi mật khẩu</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              
+                <div class="form-group">
+                    <label>Tên sản phẩm</label>
+                    <input type="text" class="form-control" id="tenSP" />
+                </div>
+
+                <div class="form-group">
+                    <label>Hình</label>
+                    <input type="file" class="form-control" id="hinh" disabled />
+                </div>
+                <div class="form-group">
+                    <label>Số lượng</label>
+                    <input type="text" class="form-control" id="sl" />
+                </div>
+                <div class="form-group">
+                    <label>Đơn giá</label>
+                    <input type="text" class="form-control" id="dg" />
+                </div>
+                <div class="form-group">
+                    <label>Mã loại</label>
+                    <select class="form-select" id="loai_" aria-label="Default select example">
+                        @foreach (var i in Model)
+                        {
+                            <option id="loai_" value="@i.MALOAI">@i.TenLoai</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" id="Them__Sp">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Sua*@
+<div class="modal fade" id="Sua_SP" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Đổi mật khẩu</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Mã sản phẩm</label>
+                    <input type="text" class="form-control" id="maSP" disabled />
+                </div>
+                <div class="form-group">
+                    <label>Tên sản phẩm</label>
+                    <input type="text" class="form-control" id="tenSP_s" />
+                </div>
+
+                <div class="form-group">
+                    <label>Hình</label>
+                    <input type="file" class="form-control" id="hinh_s" disabled />
+                </div>
+                <div class="form-group">
+                    <label>Số lượng</label>
+                    <input type="text" class="form-control" id="sl_s" />
+                </div>
+                <div class="form-group">
+                    <label>Đơn giá</label>
+                    <input type="text" class="form-control" id="dg_s" />
+                </div>
+                <div class="form-group">
+                    <label>Mã loại</label>
+                    <input type="text" class="form-control" id="loaiSP_s" />
+
+                </div>
+                <div class="form-group">
+                    <label>Mã loại</label>
+                    <select class="form-select" id="dv_vc" aria-label="Default select example">
+                        @foreach (var i in Model)
+                        {
+                            <option id="loai_s" value="@i.MALOAI">@i.TenLoai</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" id="updateSanPham">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" i>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*xoa*@
+<div class="modal" tabindex="-1" id="deleteSP">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có muốn xóa sản phẩm</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="thoat_Xoa" data-bs-dismiss="modal">Thoát</button>
+                <button type="button" class="btn btn-primary" id="xoa_SP">Đồng Ý</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="~/Scripts/toastr.js"></script>
+<script>
+    $(document).ready(function () {
+        LoadDssp()
+    })
+
+    function LoadDssp() {
+        $.ajax(
+            {
+                url: '/Admin/LoadSanPham',
+                type: 'get',
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#load_Sp').empty()
+                        $.each(data.dssp, function (k, v) {
+                            let tr = '<tr id=' + v.MASP + '>'
+                            tr += '<td >' + v.MASP + '</td>';
+                            tr += ' <td>' + '<div class="d-flex align-items-center">'
+                                +
+                                '<img style="width: 45px; height: 45px;" src="/Assces/Anh/img_SanPham/' + v.Hinh + '" alt="">'
+                                + '<div class="ms-3">' + v.TENSP + '</div>'
+                                + '</td>';
+                            tr += ' <td>' + v.SOLUONG + '</td>';
+                            tr += ' <td>' + v.DONGIA + '</td>';
+                            tr += ' <td>' + v.loaiSp + '</td>';
+                            tr += '<td style ="display: flex; justify-content: space-between";>'
+                                + '<button type = "button" class="btn btn-primary btn-sm" >Mô tả</button>'
+                                + '<button type = "button" data-id ="' + v.MASP+' "name ="Xoa" class="btn btn-primary btn-sm" >Xóa</button>'
+                                + '<button type = "button"   name="edit" class="btn btn-primary btn-sm" >Sửa</button>' + '</td >'
+                            $('#load_Sp').append(tr);
+                        });
+
+                    }
+                }
+            }
+        );
+    }
+
+
+ // UPDATE san pham
+    $(document).on('click', "button[name ='edit']", function () {
+
+        $('#Sua_SP').modal('show');
+        let maSP = $(this).closest('tr').attr('id');
+        $.ajax(
+            {
+                url: '/Admin/loadttSp',
+                type: 'get',
+                data: {
+                    msp: maSP
+                },
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#maSP').val(data.MASP);
+                        $('#tenSP_s').val(data.tenSP);
+                        //$('#hinh').val(data.Sl);
+                        $('#sl_s').val(data.Sl);
+                        $('#dg_s').val(data.dg);
+                        $('#loaiSP_s').val(data.tenL);
+                        $('#SuaSP').modal('show');
+                    }
+                }
+            }
+        );
+    })
+
+
+    $('#updateSanPham').clicks(function () {
+
+        let _masp = $('#maSP').val();
+        let _tensp = $('#tenSP_s').val();
+        let _soLuong = $('#sl_s').val();
+        let _donGia = $('#dg_s').val();
+        $.ajax({
+            url: '/Admin/SuaSanPham',
+            type: 'post',
+            data: {
+                masp: _masp,
+                tensp: _tensp,
+                sl: _soLuong,
+                dg: _donGia,
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    toastr.error(data.msg, "Thông Báo ");
+                }
+                else {
+                    $('#SuaSP').modal('toggle');
+                    toastr.success(data.msg, "Thông Báo ");
+
+                    LoadDssp();
+                }
+
+            }
+        })
+    });
+
+
+
+    //xóa sản phẩm
+    $(document).on('click', "button[name ='Xoa']", function () {
+        let maSPs = null;
+        maSPs = $(this).closest('tr').attr('id');
+
+        if (confirm("Bạn có thật sự muốn xóa")) {
+            $.ajax({
+                url: '/Admin/xoaSp',
+                type: 'post',
+                data: {
+                    masp: maSPs,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+
+                        toastr.error(data.msg, "Thông Báo ");
+                    }
+                    else {
+                       
+                        toastr.success(data.msg, "Thông báo");
+                        LoadDssp();
+                        return;
+                        $('#deleteSP').modal('show')
+                    }
+
+                }
+            })
+        }
+        
+    })
+
+
+
+
+
+    // Thêm sản phâm
+    $('#them_SP').click(function () {
+        $('#ThemSp').modal('show')
+        $('#Them__Sp').click(function () {
+            let _tensp = $('#tenSP').val();
+            /* let _hinh = $('#hinh').val();*/
+            let _soLuong = $('#sl').val();
+            let _donGia = $('#dg').val();
+            let loai = $('#loai_').find(":selected").val();
+            $.ajax({
+                url: '/Admin/themSP',
+                type: 'post',
+                data: {
+                   /* masp: _masp,*/
+                    tensp: _tensp,
+                   /* hinh: _hinh,*/
+                    sl: _soLuong,
+                    dg: _donGia,
+                    maLoai: loai
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert("Cập nhật thất bại")
+                    }
+                    else {
+                        toastr.error(data.msg, "Thông Báo ");
+                        LoadDssp();
+                    }
+
+                }
+            })
+        });
+
+    });
+</script>

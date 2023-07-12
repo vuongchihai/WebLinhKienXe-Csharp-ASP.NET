@@ -1,0 +1,209 @@
+﻿
+@{
+    ViewBag.Title = "DatHang";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    List<DONVIVANCHUYEN> dvVc = ViewBag.dsdv;
+}
+@using System.Globalization;
+<link href="~/Content/toastr.css" rel="stylesheet" />
+
+@using Web_Lk_Xe.Models;
+@model List<GIOHANG>
+<style>
+    .order_main {
+        padding: 50px;
+    }
+
+
+    .order_body-left {
+        padding: 12px;
+        box-shadow: 0 3px 6px -4px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
+        border-radius: 10px;
+    }
+
+    .product_total {
+        text-align: right;
+    }
+
+    .product-price {
+        text-align: right;
+        color: red;
+        font-size: 14px;
+    }
+
+    .main_detail_receipt {
+        padding: 12px;
+        box-shadow: 0 3px 6px -4px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
+        border-radius: 10px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding-left: 0px !important;
+    }
+
+    .oder-contact {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+    }
+
+        .oder-contact input {
+            padding: 5px;
+        }
+</style>
+
+
+<div class="order_main">
+    <div class="container">
+        <div class="order_body row">
+            <div class="order_body-left col-7">
+                <div class="order_body-list ">
+                    <div class="ordertitle">
+                        <h4>Thông tin giao hàng</h4>
+                    </div>
+                    <div class="oder-contact">
+                        <label for="">Họ Tên (*)</label>
+                        <input type="text" id="ng">
+
+                    </div>
+                    <div class="oder-contact">
+                        <label for="">Số Điện Thoại (*) </label>
+                        <input type="text" id='sdtNh'>
+
+                    </div>
+                    <div class="oder-contact">
+                        <label for="">Địa Chỉ (*) </label>
+                        <input type="text" id="dc">
+
+                    </div>
+                    <div class="oder-contact">
+                        <label for="">Đơn vị vận chuyển (*) </label>
+                        <select class="form-select" id="dv_vc" aria-label="Default select example">
+                            @foreach (var i in dvVc)
+                            {
+                                <option value="@i.MADV">@i.TENDV</option>
+                            }
+                        </select>
+
+                    </div>
+
+                </div>
+                <div style="display: flex; justify-content: center;">
+                    <button style="padding: 5px 37px; border: none;">Địa Chỉ Mới</button>
+                </div>
+
+            </div>
+            <div class="order_body-right col-5">
+                <div class="main_detail_receipt">
+                    <div class="detail_receipt-body">
+                        <div class="detail_receipt-item">
+                            <h4>Đơn Hàng Của Bạn</h4>
+                        </div>
+                        <div class="detail_receipt_review">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="product_name">Sản Phẩm</th>
+                                        <th class="product_total">Tổng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+
+                                    @foreach (var item in Model)
+                                    {
+
+
+                                        var tong = item.SOLUONGMU * item.SANPHAM.DONGIA;
+
+                                        <tr>
+                                            <td class="product_name">
+                                                @item.SANPHAM.TENSP
+                                                <strong class="product-quantity">× @item.SOLUONGMU</strong>
+                                            </td>
+                                            <td class="product-price">@string.Format(new CultureInfo("vi-VN"), "{0:#,##0}", tong)₫</td>
+                                        </tr>
+
+                                    }
+
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Tổng</th>
+                                        @{ 
+                                            var a = ViewBag.TongTien;
+                                        }
+                                        <td class="product-price">@string.Format(new CultureInfo("vi-VN"), "{0:#,##0}", a) ₫</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Giao hàng</th>
+                                        <td style="font-size: 13px;">giao hàng miễn phí</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Đơn vi vận chuyển</th>
+                                        <td style="font-size: 13px;">giao hàng miễn phí</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="payment">
+                                <ul class="payment-list">
+                                    <li class="payment-item">
+                                        <input type="radio" name="pay" id="pay" value="Trả tiền mặt khi nhận hàng"> Trả tiền mặt khi nhận hàng
+                                    </li>
+                                    <li class="payment-item">
+                                        <input type="radio" name="pay" id="pay" value="Chuyển khoảng"> Chuyển khoảng
+                                    </li>
+                                    <li class="payment-item"></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="display: flex; justify-content: center;">
+                        <button style="padding: 5px 37px; border: none;" id="DatHang">Đặt Hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="~/Scripts/toastr.js"></script>
+<script>
+
+    //Them dia chi gian hang
+
+
+    $('#DatHang').click(function () {
+        let DiaChi = $('#dc').val();
+        let StdNh = $('#sdtNh').val();
+        let ngH = $('#ng').val();
+        let dv_Vc = $('#dv_vc').find(":selected").val();
+        $.ajax({
+            url: '/DatHang/XlDatHang',
+            type: 'post',
+            data: {
+                diaChiNN: DiaChi,
+                sdtNN: StdNh,
+                tenNN: ngH,
+                dvVC: dv_Vc,
+
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    toastr.error(data.msg, "Thông Báo ");
+                }
+                else {
+                    toastr.success(data.msg, "Thông Báo");
+                }
+
+            }
+        })
+    });
+</script>

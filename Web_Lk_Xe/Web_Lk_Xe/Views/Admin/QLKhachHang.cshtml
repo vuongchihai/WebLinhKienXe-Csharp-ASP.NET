@@ -1,0 +1,243 @@
+﻿
+@{
+    ViewBag.Title = "QLKhachHang";
+    Layout = "~/Views/Shared/Admin_Page.cshtml";
+}
+<link href="~/Content/toastr.css" rel="stylesheet" />
+<style>
+    :root {
+        --main-color: #DD2F6E;
+        --color-dark: #1D2231;
+        --text-grey: #8390A2;
+    }
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        list-style-type: none;
+        text-decoration: none;
+    }
+
+    ul {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .menu-function {
+        padding: 15px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05) !important;
+        background-color: #fff;
+        border-radius: 10px;
+    }
+
+        .menu-function ul {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-function li {
+        }
+
+            .menu-function li button {
+                background-color: #2fdd8f;
+                border: none;
+                width: 100%;
+                height: 100%;
+                padding: 10px;
+                border-radius: 12px;
+                cursor: pointer;
+            }
+
+    .table-content {
+        margin-top: 20px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05) !important;
+        border-radius: 13px;
+        background-color: #fff;
+    }
+
+    th, td {
+        padding: 20px !important;
+    }
+</style>
+<div class="main-title">
+    <p class="font-weight-bold">Quản Lý Hóa Đơn</p>
+</div>
+<div class="main-content">
+
+    <div class="menu-function">
+        <ul>
+            <li><button id="them_SP">Thêm Sản Phẩm</button></li>
+        </ul>
+    </div>
+    <div class="table-content">
+        <table class="table align-middle">
+            <thead class="bg-light">
+                <tr>
+                    <th>Mã khách hàng</th>
+                    <th>Tên khách hàng</th>
+                    <th>Ngày sinh</th>
+                    <th>Giới tính</th>
+                    <th>Số điện thoại</th>
+                    <th>Tên tài khoản</th>
+                    <th>Chức năng</th>
+
+                </tr>
+            </thead>
+            <tbody id="khachHang">
+                @*<tr>
+                        <td>SP001</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img style="width: 45px; height: 45px;" src="./asces/img/DVD-Honda-Civic-01-300x300 (2).jpg" alt="">
+                                <div class="ms-3">
+                                    DVD Honda Civic 2007-2011
+                                </div>
+                            </div>
+                        </td>
+                        <td>10</td>
+                        <td>Màn hình</td>
+                        <td>Senior</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>*@
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@*end view*@
+
+<div class="modal fade" id="tk_Kh" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Xem thông tin tài khoản</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+
+                <div class="form-group">
+                    <label>Tên tài khoản</label>
+                    <input type="text" class="form-control" id="tt_tk" disabled />
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="text" class="form-control" id="tt_pass"  />
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" id="sua">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="~/Scripts/toastr.js"></script>
+<script>
+
+
+    $(document).ready(function () {
+        loadKh()
+    })
+
+    // Load tk
+    function loadKh() {
+        $.ajax(
+            {
+                url: '/Admin/LoadKhachHang',
+                type: 'get',
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#khachHang').empty()
+                        $.each(data.dskh, function (k, v) {
+                            let tr = '<tr id=' + v.MAKH + '>'
+                            tr += '<td>' + v.MAKH + '</td>';
+                            tr += ' <td>' + v.TENKH + '</td>';
+                            tr += ' <td>' + v.NGAYSINH + '</td>';
+                            tr += ' <td>' + v.GIOTINH + '</td>';
+                            tr += ' <td>' + v.SDT + '</td>';
+                            tr += ' <td>' + v.TENDN + '</td>';
+                            tr += '<td style ="display: flex; justify-content: space-between";>'
+                                + '<button type = "button"  name ="xemct_tk" class="btn btn-primary btn-sm" >Xem chi tiết</button>'
+                                + '<button type = "button"  name ="Xoa_ctHd" class="btn btn-primary btn-sm" >Xóa</button>'
+                                + '<button type = "button"   name="edit_Hd" class="btn btn-primary btn-sm" >Sửa</button>' + '</td >'
+                            $('#khachHang').append(tr);
+                        });
+                    }
+                }
+            }
+        );
+    }
+
+    // Xem chi tiết hóa đơn
+    $(document).on('click', "button[name ='xemct_tk']", function () {
+
+
+        let makh = $(this).closest('tr').attr('id');
+        $.ajax(
+            {
+                url: '/Admin/xemTK',
+                type: 'get',
+                data: {
+                    ma_kh: makh
+                },
+                success: function (data) {
+                    if (data.code == 500) {
+                        $('#tt_tk').val(data.tdn);
+                        $('#tt_pass').val(data.pass);
+                        $('#tk_Kh').modal('show')
+                    }
+                }
+            }
+        );
+    })
+
+
+    // Sửa trạng thái
+
+    $('#sua').clicks(function () {
+
+        let tk = $('#tt_tk').val();
+        let pass = $('#tt_pass').val();
+        $.ajax({
+            url: '/Admin/suatk',
+            type: 'post',
+            data: {
+                tks: tk,
+                pass: pass
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    toastr.error(data.msg, "Thông Báo ");
+                }
+                else {
+                 
+                    toastr.success(data.msg, "Thông Báo ");
+                }
+
+            }
+        })
+    });
+
+
+
+
+</script>
+
+
+
+

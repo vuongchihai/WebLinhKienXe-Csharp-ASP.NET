@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "gioNull";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+
+<style>
+    .body-cart {
+        padding: 70px;
+        height: 504px;
+        padding: 20px;
+    }
+
+    .cart-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .text-empty {
+        margin-top: 20px;
+        transition: transform 0.4s;
+        color: black;
+        font-weight: bold;
+    }
+
+        .text-empty:hover {
+            transform: translateY(-10px);
+            color: rgba(215, 215, 34, 0.807);
+        }
+</style>
+
+<div class="body-cart">
+    <div class="container">
+        <div class="cart-empty">
+            <img class="img-empty" src="~/Assces/Anh/background/Cartnull.png" />
+            <a href="/Home/Index" class="text-empty">Tiếp tục mua hàng →</a>
+        </div>
+
+    </div>
+</div>
+
